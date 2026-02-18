@@ -1,20 +1,19 @@
+# Create Pull Request Action (Python)
 
-
-# Create Pull Request Action (Python Port)
-
-[![Test](https://github.com/your-org/create-pull-request-python/actions/workflows/test.yml/badge.svg)](https://github.com/your-org/create-pull-request-python/actions/workflows/test.yml)
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Create%20Pull%20Request%20(Python)-blue?logo=github)](https://github.com/marketplace/actions/create-pull-request-python)
+[![Test](https://github.com/dikshant-devops/create-pull-request/actions/workflows/test.yml/badge.svg)](https://github.com/dikshant-devops/create-pull-request/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A Python port of the popular [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub Action. Automatically creates pull requests for changes made during workflow execution.
 
 ## Features
 
-- 🐍 **Pure Python** - Easy to understand and contribute to
-- 🔄 **Feature Parity** - All 30+ inputs and 4 outputs from original action
-- 🐳 **Docker-based** - Consistent environment across all runners
-- 🧪 **Well Tested** - Comprehensive unit and integration test coverage
-- 📦 **PyGithub** - Robust GitHub API integration with retry logic
-- 🔧 **Robust** - Handles rebasing, cherry-picking, and conflict resolution
+- **Pure Python** - Easy to understand and contribute to
+- **Feature Parity** - All 23 inputs and 6 outputs from the original action
+- **Docker-based** - Consistent environment across all runners
+- **Well Tested** - Comprehensive unit and integration test coverage
+- **PyGithub** - Robust GitHub API integration with retry logic
+- **Robust** - Handles rebasing, cherry-picking, and conflict resolution
 
 ## Why Python?
 
@@ -46,7 +45,7 @@ jobs:
           echo "Updated content" > file.txt
 
       - name: Create Pull Request
-        uses: your-org/create-pull-request-python@v1
+        uses: dikshant-devops/create-pull-request@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Update file.txt"
@@ -63,7 +62,7 @@ jobs:
 
 ```yaml
 - name: Create Pull Request
-  uses: your-org/create-pull-request-python@v1
+  uses: dikshant-devops/create-pull-request@v1
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
     commit-message: "Update dependencies"
@@ -83,7 +82,7 @@ jobs:
 
 ```yaml
 - name: Create Pull Request
-  uses: your-org/create-pull-request-python@v1
+  uses: dikshant-devops/create-pull-request@v1
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
     branch: update-
@@ -95,7 +94,7 @@ jobs:
 
 ```yaml
 - name: Create Pull Request
-  uses: your-org/create-pull-request-python@v1
+  uses: dikshant-devops/create-pull-request@v1
   with:
     token: ${{ secrets.PAT_TOKEN }}  # Needs repo scope
     push-to-fork: username/repo-fork
@@ -163,7 +162,7 @@ jobs:
           curl -o data.json https://api.example.com/data
 
       - name: Create PR if data changed
-        uses: your-org/create-pull-request-python@v1
+        uses: dikshant-devops/create-pull-request@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Update data.json"
@@ -198,7 +197,7 @@ jobs:
           black .
 
       - name: Create PR for formatting
-        uses: your-org/create-pull-request-python@v1
+        uses: dikshant-devops/create-pull-request@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "style: Format code with black"
@@ -231,7 +230,7 @@ jobs:
           pip freeze > requirements.txt
 
       - name: Create PR
-        uses: your-org/create-pull-request-python@v1
+        uses: dikshant-devops/create-pull-request@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: Update dependencies"
@@ -287,8 +286,8 @@ The action executes in 10 phases:
 | **Git Operations** | @actions/exec | subprocess wrapper |
 | **Docker Image** | ~100MB (Node Alpine) | ~150MB (Python slim) |
 | **Startup Time** | ~2-3s | ~3-4s |
-| **Inputs** | 30+ | 30+ (identical) |
-| **Outputs** | 4 | 4 (identical) |
+| **Inputs** | 23 | 23 (identical) |
+| **Outputs** | 6 | 6 (identical) |
 | **Test Framework** | Jest | pytest |
 | **Type Safety** | TypeScript | Python type hints |
 
@@ -300,7 +299,7 @@ The action executes in 10 phases:
 
 ```bash
 # Clone repository
-git clone https://github.com/your-org/create-pull-request-python.git
+git clone https://github.com/dikshant-devops/create-pull-request.git
 cd create-pull-request-python
 
 # Install dependencies
@@ -342,10 +341,6 @@ docker run --rm -v $(pwd):/workspace \
   create-pull-request-python
 ```
 
-### Project Structure
-
-See [docs/architecture.md](docs/architecture.md) for detailed architecture documentation.
-
 ## Contributing
 
 Contributions welcome! Please:
@@ -356,8 +351,6 @@ Contributions welcome! Please:
 4. Ensure all tests pass
 5. Submit a pull request
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
-
 ## Migration from TypeScript Version
 
 The Python port is a **drop-in replacement** - simply change the action reference:
@@ -367,10 +360,40 @@ The Python port is a **drop-in replacement** - simply change the action referenc
 - uses: peter-evans/create-pull-request@v6
 
 # After (Python)
-- uses: your-org/create-pull-request-python@v1
+- uses: dikshant-devops/create-pull-request@v1
 ```
 
 All inputs and outputs are identical. No workflow changes required!
+
+## Publishing to GitHub Marketplace
+
+This action is ready for the [GitHub Actions Marketplace](https://github.com/marketplace?type=actions). The `action.yml` already includes the required `branding` configuration.
+
+### Prerequisites
+
+- The repository must be **public**
+- Enable **two-factor authentication** on your GitHub account
+- Accept the [GitHub Marketplace Developer Agreement](https://docs.github.com/en/apps/github-marketplace/github-marketplace-overview/about-github-marketplace)
+
+### Steps to Publish
+
+1. Go to the repository on GitHub
+2. Click **Releases** > **Draft a new release**
+3. Check the **Publish this Action to the GitHub Marketplace** checkbox
+4. GitHub will validate your `action.yml` -- fix any reported errors
+5. Choose a tag (e.g., `v1.0.0`) and create the release
+6. Once published, the action will appear at `https://github.com/marketplace/actions/create-pull-request-python`
+
+### Marketplace Metadata (from action.yml)
+
+| Field | Value |
+|-------|-------|
+| Name | `Create Pull Request (Python)` |
+| Icon | `git-pull-request` |
+| Color | `blue` |
+| Author | `Create Pull Request Action` |
+
+After publishing, users can find and use your action directly from the marketplace.
 
 ## License
 
@@ -382,10 +405,5 @@ This is a Python port of the excellent [create-pull-request](https://github.com/
 
 ## Support
 
-- 📖 [Documentation](https://github.com/your-org/create-pull-request-python/wiki)
-- 🐛 [Report Issues](https://github.com/your-org/create-pull-request-python/issues)
-- 💬 [Discussions](https://github.com/your-org/create-pull-request-python/discussions)
-
----
-
-**Made with ❤️ using Python**
+- [Report Issues](https://github.com/dikshant-devops/create-pull-request/issues)
+- [Discussions](https://github.com/dikshant-devops/create-pull-request/discussions)

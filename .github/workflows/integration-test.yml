@@ -1,0 +1,112 @@
+name: Integration Test
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  test-action:
+    name: Test Action End-to-End
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Make test changes
+        run: |
+          echo "Integration test run at $(date -u)" > integration-test-output.txt
+
+      - name: Run create-pull-request action
+        id: cpr
+        uses: ./
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "test: integration test commit"
+          branch: integration-test/verify-action
+          title: "test: Verify create-pull-request action works"
+          body: |
+            Automated integration test PR.
+            This PR was created by the integration test workflow to verify the action works correctly.
+            **This PR can be closed without merging.**
+          labels: test, automated
+          delete-branch: true
+
+      - name: Verify outputs
+        run: |
+          echo "Pull Request Number: ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL: ${{ steps.cpr.outputs.pull-request-url }}"
+          echo "Operation: ${{ steps.cpr.outputs.pull-request-operation }}"
+          echo "Head SHA: ${{ steps.cpr.outputs.pull-request-head-sha }}"
+          echo "Branch: ${{ steps.cpr.outputs.pull-request-branch }}"
+
+          # Verify critical outputs are non-empty
+          if [ -z "${{ steps.cpr.outputs.pull-request-number }}" ]; then
+            echo "FAIL: pull-request-number is empty"
+            exit 1
+          fi
+
+          if [ -z "${{ steps.cpr.outputs.pull-request-url }}" ]; then
+            echo "FAIL: pull-request-url is empty"
+            exit 1
+          fi
+
+          OPERATION="${{ steps.cpr.outputs.pull-request-operation }}"
+          if [ "$OPERATION" != "created" ] && [ "$OPERATION" != "updated" ]; then
+            echo "FAIL: unexpected operation '$OPERATION' (expected 'created' or 'updated')"
+            exit 1
+          fi
+
+          echo "All output validations passed!"
+
+      - name: Close test PR
+        if: steps.cpr.outputs.pull-request-number
+        run: |
+          gh pr close ${{ steps.cpr.outputs.pull-request-number }} --delete-branch || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test-no-changes:
+    name: Test No Changes Scenario
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run action without changes
+        id: cpr
+        uses: ./
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: integration-test/no-changes
+
+      - name: Verify no PR was created
+        run: |
+          if [ -n "${{ steps.cpr.outputs.pull-request-number }}" ]; then
+            echo "FAIL: PR was created when no changes exist"
+            exit 1
+          fi
+          echo "Correctly handled no-changes scenario"
+
+  test-docker-build:
+    name: Test Docker Image Runs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t cpr-test .
+
+      - name: Verify Python module resolves
+        run: |
+          docker run --rm --entrypoint python cpr-test -c "from create_pull_request.main import run; print('Module import OK')"

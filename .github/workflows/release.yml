@@ -57,7 +57,7 @@ jobs:
 
             ### Features
             - Complete Python port of create-pull-request action
-            - All 30+ inputs and 4 outputs supported
+            - All 23 inputs and 6 outputs supported
             - Docker-based GitHub Action
             - PyGithub for GitHub API interactions
             - Comprehensive test coverage

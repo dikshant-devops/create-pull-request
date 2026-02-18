@@ -21,7 +21,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY src/ ./src/
 
 # Set Python path
-ENV PYTHONPATH=/action
+ENV PYTHONPATH=/action/src
 
 # Set entrypoint
 ENTRYPOINT ["python", "-m", "create_pull_request"]

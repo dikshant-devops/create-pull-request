@@ -1,0 +1,113 @@
+name: 'Create Pull Request (Python)'
+description: 'Creates a pull request for changes to your repository in the actions workspace'
+author: 'Create Pull Request Action'
+branding:
+  icon: 'git-pull-request'
+  color: 'blue'
+
+inputs:
+  token:
+    description: 'GITHUB_TOKEN or a repo scoped Personal Access Token (PAT)'
+    default: ${{ github.token }}
+  path:
+    description: >
+      Relative path under $GITHUB_WORKSPACE to the repository.
+    default: '.'
+  add-paths:
+    description: >
+      A comma or newline-separated list of file paths to commit.
+      Paths should follow git's pathspec syntax.
+      Defaults to adding all new and modified files.
+    default: ''
+  commit-message:
+    description: 'The message to use when committing changes.'
+    default: '[create-pull-request] automated change'
+  committer:
+    description: >
+      The committer name and email address in the format `Display Name <email@address.com>`.
+      Defaults to the GitHub Actions bot user.
+    default: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
+  author:
+    description: >
+      The author name and email address in the format `Display Name <email@address.com>`.
+      Defaults to the user who triggered the workflow run.
+    default: '${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>'
+  signoff:
+    description: 'Add `Signed-off-by` line by the committer at the end of the commit log message.'
+    default: false
+  sign-commits:
+    description: 'Sign commits with GitHub.'
+    default: false
+  branch:
+    description: 'The pull request branch name.'
+    default: 'create-pull-request/patch'
+  delete-branch:
+    description: >
+      Delete the branch when closing pull requests, and when undeleted after merging.
+    default: false
+  branch-suffix:
+    description: >
+      The branch suffix type when using the alternative branching strategy.
+      Valid values are `random`, `timestamp` and `short-commit-hash`.
+    default: 'none'
+  base:
+    description: >
+      The pull request base branch.
+      Defaults to the branch checked out in the workflow.
+    default: ''
+  push-to-fork:
+    description: >
+      A fork of the checked out parent repository to which the pull request branch will be pushed.
+      e.g. `owner/repo-fork`.
+      The authenticated user must have write access to the fork.
+    default: ''
+  title:
+    description: 'The title of the pull request.'
+    default: 'Changes by create-pull-request action'
+  body:
+    description: 'The body of the pull request.'
+    default: ''
+  body-path:
+    description: 'The path to a file containing the pull request body. Takes precedence over `body`.'
+    default: ''
+  labels:
+    description: 'A comma or newline separated list of labels.'
+    default: ''
+  assignees:
+    description: 'A comma or newline separated list of assignees (GitHub usernames).'
+    default: ''
+  reviewers:
+    description: 'A comma or newline separated list of reviewers (GitHub usernames) to request a review from.'
+    default: ''
+  team-reviewers:
+    description: >
+      A comma or newline separated list of GitHub teams to request a review from.
+      Note that a `repo` scoped Personal Access Token (PAT) may be required.
+    default: ''
+  milestone:
+    description: 'The number of the milestone to associate this pull request with.'
+    default: 0
+  draft:
+    description: 'Create a draft pull request.'
+    default: false
+  maintainer-can-modify:
+    description: 'Indicates whether maintainers can modify the pull request.'
+    default: true
+
+outputs:
+  pull-request-number:
+    description: 'The pull request number'
+  pull-request-url:
+    description: 'The URL of the pull request'
+  pull-request-operation:
+    description: 'The pull request operation performed by the action, `created`, `updated` or `closed`.'
+  pull-request-head-sha:
+    description: 'The commit SHA of the pull request branch'
+  pull-request-branch:
+    description: 'The pull request branch name'
+  pull-request-commits-verified:
+    description: 'Indicates whether all pull request commits are verified'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

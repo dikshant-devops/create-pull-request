@@ -1,113 +1,183 @@
-name: 'Create Pull Request (Python)'
-description: 'Creates a pull request for changes to your repository in the actions workspace'
-author: 'Create Pull Request Action'
+name: "Create Pull Request (Python)"
+description: >
+  Creates a pull request for changes to your repository in the actions workspace.
+  A Python port of peter-evans/create-pull-request with full feature parity.
+author: "dikshant-devops"
+
 branding:
-  icon: 'git-pull-request'
-  color: 'blue'
+  icon: "git-pull-request"
+  color: "blue"
 
 inputs:
   token:
-    description: 'GITHUB_TOKEN or a repo scoped Personal Access Token (PAT)'
-    default: ${{ github.token }}
+    description: >
+      GITHUB_TOKEN or a repo-scoped Personal Access Token (PAT).
+    required: true
+    default: "${{ github.token }}"
+
   path:
     description: >
       Relative path under $GITHUB_WORKSPACE to the repository.
-    default: '.'
+    required: false
+    default: "."
+
   add-paths:
     description: >
       A comma or newline-separated list of file paths to commit.
       Paths should follow git's pathspec syntax.
       Defaults to adding all new and modified files.
-    default: ''
+    required: false
+    default: ""
+
   commit-message:
-    description: 'The message to use when committing changes.'
-    default: '[create-pull-request] automated change'
+    description: >
+      The message to use when committing changes.
+    required: false
+    default: "[create-pull-request] automated change"
+
   committer:
     description: >
-      The committer name and email address in the format `Display Name <email@address.com>`.
+      The committer name and email address in the format
+      `Display Name <email@address.com>`.
       Defaults to the GitHub Actions bot user.
-    default: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
+    required: false
+    default: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+
   author:
     description: >
-      The author name and email address in the format `Display Name <email@address.com>`.
+      The author name and email address in the format
+      `Display Name <email@address.com>`.
       Defaults to the user who triggered the workflow run.
-    default: '${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>'
+    required: false
+    default: "${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
+
   signoff:
-    description: 'Add `Signed-off-by` line by the committer at the end of the commit log message.'
-    default: false
+    description: >
+      Add `Signed-off-by` line by the committer at the end of the commit log message.
+    required: false
+    default: "false"
+
   sign-commits:
-    description: 'Sign commits with GitHub.'
-    default: false
+    description: >
+      Sign commits using the GitHub API (web-flow signature).
+    required: false
+    default: "false"
+
   branch:
-    description: 'The pull request branch name.'
-    default: 'create-pull-request/patch'
+    description: >
+      The pull request branch name.
+    required: false
+    default: "create-pull-request/patch"
+
   delete-branch:
     description: >
-      Delete the branch when closing pull requests, and when undeleted after merging.
-    default: false
+      Delete the branch when closing pull requests,
+      and when undeleted after merging.
+    required: false
+    default: "false"
+
   branch-suffix:
     description: >
       The branch suffix type when using the alternative branching strategy.
-      Valid values are `random`, `timestamp` and `short-commit-hash`.
-    default: 'none'
+      Valid values are `random`, `timestamp`, and `short-commit-hash`.
+    required: false
+    default: "none"
+
   base:
     description: >
       The pull request base branch.
       Defaults to the branch checked out in the workflow.
-    default: ''
+    required: false
+    default: ""
+
   push-to-fork:
     description: >
-      A fork of the checked out parent repository to which the pull request branch will be pushed.
-      e.g. `owner/repo-fork`.
+      A fork of the checked-out parent repository to which the pull request
+      branch will be pushed.  e.g. `owner/repo-fork`.
       The authenticated user must have write access to the fork.
-    default: ''
+    required: false
+    default: ""
+
   title:
-    description: 'The title of the pull request.'
-    default: 'Changes by create-pull-request action'
+    description: >
+      The title of the pull request.
+    required: false
+    default: "Changes by create-pull-request action"
+
   body:
-    description: 'The body of the pull request.'
-    default: ''
+    description: >
+      The body of the pull request.
+    required: false
+    default: ""
+
   body-path:
-    description: 'The path to a file containing the pull request body. Takes precedence over `body`.'
-    default: ''
+    description: >
+      The path to a file containing the pull request body.
+      Takes precedence over `body`.
+    required: false
+    default: ""
+
   labels:
-    description: 'A comma or newline separated list of labels.'
-    default: ''
+    description: >
+      A comma or newline-separated list of labels.
+    required: false
+    default: ""
+
   assignees:
-    description: 'A comma or newline separated list of assignees (GitHub usernames).'
-    default: ''
+    description: >
+      A comma or newline-separated list of assignees (GitHub usernames).
+    required: false
+    default: ""
+
   reviewers:
-    description: 'A comma or newline separated list of reviewers (GitHub usernames) to request a review from.'
-    default: ''
+    description: >
+      A comma or newline-separated list of reviewers (GitHub usernames)
+      to request a review from.
+    required: false
+    default: ""
+
   team-reviewers:
     description: >
-      A comma or newline separated list of GitHub teams to request a review from.
-      Note that a `repo` scoped Personal Access Token (PAT) may be required.
-    default: ''
+      A comma or newline-separated list of GitHub teams to request a
+      review from.
+      Note that a `repo`-scoped Personal Access Token (PAT) may be required.
+    required: false
+    default: ""
+
   milestone:
-    description: 'The number of the milestone to associate this pull request with.'
-    default: 0
+    description: >
+      The number of the milestone to associate this pull request with.
+    required: false
+    default: "0"
+
   draft:
-    description: 'Create a draft pull request.'
-    default: false
+    description: >
+      Create a draft pull request.
+    required: false
+    default: "false"
+
   maintainer-can-modify:
-    description: 'Indicates whether maintainers can modify the pull request.'
-    default: true
+    description: >
+      Indicates whether maintainers can modify the pull request.
+    required: false
+    default: "true"
 
 outputs:
   pull-request-number:
-    description: 'The pull request number'
+    description: "The pull request number"
   pull-request-url:
-    description: 'The URL of the pull request'
+    description: "The URL of the pull request"
   pull-request-operation:
-    description: 'The pull request operation performed by the action, `created`, `updated` or `closed`.'
+    description: >
+      The pull request operation performed by the action:
+      `created`, `updated`, or `closed`.
   pull-request-head-sha:
-    description: 'The commit SHA of the pull request branch'
+    description: "The commit SHA of the pull request branch"
   pull-request-branch:
-    description: 'The pull request branch name'
+    description: "The pull request branch name"
   pull-request-commits-verified:
-    description: 'Indicates whether all pull request commits are verified'
+    description: "Indicates whether all pull request commits are verified"
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: "docker"
+  image: "Dockerfile"

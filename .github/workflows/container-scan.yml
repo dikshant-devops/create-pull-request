@@ -1,0 +1,44 @@
+name: Container Scan
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  schedule:
+    - cron: "0 6 * * 3" # Every Wednesday at 06:00 UTC
+
+permissions:
+  security-events: write
+  contents: read
+
+concurrency:
+  group: container-scan-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  trivy:
+    name: Trivy Image Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Build Docker image
+        run: |
+          docker build -t create-pull-request-python:scan .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@c1824fd6edce30d7ab345a9989de00bbd46ef284 # 0.34.0
+        with:
+          image-ref: "create-pull-request-python:scan"
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH"
+
+      - name: Upload Trivy scan results to GitHub Security
+        uses: github/codeql-action/upload-sarif@f5c2471be782132e47a6e6f9c725e56730d6e9a3 # v3
+        if: always()
+        with:
+          sarif_file: "trivy-results.sarif"

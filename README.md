@@ -343,13 +343,19 @@ docker run --rm -v $(pwd):/workspace \
 
 ## Contributing
 
-Contributions welcome! Please:
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions,
+how to run the same checks as CI locally, and the pull request process.
 
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new functionality
-4. Ensure all tests pass
-5. Submit a pull request
+### Recommended Branch Protection
+
+For maintainers, enable these required status checks on `master`:
+
+- `Unit Tests` (all matrix entries)
+- `Integration Tests`
+- `Docker Build`
+- `Lint and Type Check`
+- `Analyze Python` (CodeQL)
+- `Trivy Image Scan`
 
 ## Migration from TypeScript Version
 
